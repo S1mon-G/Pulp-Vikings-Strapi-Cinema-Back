@@ -11,10 +11,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "first_name": {
-      "type": "string"
-    },
-    "last_name": {
+    "name": {
       "type": "string"
     },
     "birth_date": {
@@ -25,6 +22,13 @@
       "relation": "manyToMany",
       "target": "api::movie.movie",
       "inversedBy": "actors"
+    },
+    "img": {
+      "type": "string"
+    },
+    "tmdb_id": {
+      "type": "integer",
+      "unique": true
     }
   }
 }
