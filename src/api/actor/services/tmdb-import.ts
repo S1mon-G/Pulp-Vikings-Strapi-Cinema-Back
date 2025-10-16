@@ -52,7 +52,7 @@ module.exports = {
 
       const personData = (await personResponse.json()) as TMDBPerson;
 
-      // 3. Construire l'URL du profile_path
+      // 3. A garder ou non ca rpossible de gérer ça dynamiquement en front
       const profileImgUrl = personData.profile_path
         ? `${imageBaseUrl}${personData.profile_path}`
         : null;

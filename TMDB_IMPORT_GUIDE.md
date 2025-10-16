@@ -164,63 +164,7 @@ await strapi
   .importPopularMovies(1, "upcoming");
 
 // Enrichir 50 acteurs
-await strapi.service("api::movie.tmdb-import").enrichActors(50);
-```
-
----
-
-## Méthode 4 : Script de test rapide
-
-Créer `scripts/test-import.js` :
-
-```javascript
-const fetch = require("node-fetch");
-
-async function testImport() {
-  // Import popular page 1
-  const response = await fetch("http://localhost:1337/api/movies/import-tmdb", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ page: 1, type: "popular" }),
-  });
-
-  const data = await response.json();
-  console.log("Résultat import popular:", data);
-
-  // Import upcoming page 1
-  const upcomingResponse = await fetch(
-    "http://localhost:1337/api/movies/import-tmdb",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ page: 1, type: "upcoming" }),
-    }
-  );
-
-  const upcomingData = await upcomingResponse.json();
-  console.log("Résultat import upcoming:", upcomingData);
-
-  // Enrichir acteurs
-  const enrichResponse = await fetch(
-    "http://localhost:1337/api/actors/enrich-tmdb",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ batchSize: 50 }),
-    }
-  );
-
-  const enrichData = await enrichResponse.json();
-  console.log("Résultat enrichissement:", enrichData);
-}
-
-testImport();
-```
-
-Exécuter :
-
-```bash
-node scripts/test-import.js
+await strapi.service("api::actor.tmdb-import").enrichActors(50);
 ```
 
 ---
@@ -324,7 +268,7 @@ cron.schedule("0 4 * * *", async () => {
 
 ---
 
-## 🚀 Méthode 5 : Scripts d'automatisation (Recommandé)
+## 🚀 Méthode 4 : Scripts d'automatisation (Recommandé)
 
 ### Import massif de films
 

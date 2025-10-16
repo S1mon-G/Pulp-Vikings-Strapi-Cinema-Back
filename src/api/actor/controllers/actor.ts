@@ -12,10 +12,17 @@ export default factories.createCoreController(
           .service("api::actor.tmdb-import")
           .enrichActors(batchSize);
 
-        return ctx.send(result);
+        ctx.body = {
+          success: true,
+          data: result,
+        };
       } catch (error) {
         console.error("❌ Erreur enrichActorsFromTMDB:", error);
-        return ctx.badRequest("Erreur lors de l'enrichissement des acteurs");
+        ctx.status = 500;
+        ctx.body = {
+          success: false,
+          error: error.message,
+        };
       }
     },
   })
