@@ -36,7 +36,7 @@ async function importAllMovies() {
 
       // Pause entre chaque page
       if (page < MAX_PAGES) {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
       console.error(`❌ Page ${page} : ${error.message}`);
