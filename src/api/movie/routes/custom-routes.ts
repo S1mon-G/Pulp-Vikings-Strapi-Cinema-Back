@@ -1,7 +1,3 @@
-/**
- * Routes custom pour l'import TMDB
- */
-
 export default {
   routes: [
     {
@@ -11,7 +7,7 @@ export default {
       config: {
         policies: [],
         middlewares: [],
-        auth: false, // ⭐ Désactiver l'authentification pour cet endpoint
+        auth: false, // désactivé pour tester facilement, PENSER A REACTIVER AVEC JWT !!!!
       },
     },
   ],

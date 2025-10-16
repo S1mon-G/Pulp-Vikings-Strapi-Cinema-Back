@@ -324,6 +324,88 @@ cron.schedule("0 4 * * *", async () => {
 
 ---
 
+## 🚀 Méthode 5 : Scripts d'automatisation (Recommandé)
+
+### Import massif de films
+
+**Fichier :** `scripts/import-all-movies.js`
+
+**Importer 20 pages (400 films) :**
+
+```bash
+node scripts/import-all-movies.js
+```
+
+**Importer 50 pages (1000 films) :**
+
+```bash
+node scripts/import-all-movies.js 50
+```
+
+**Importer 10 pages de films "upcoming" :**
+
+```bash
+node scripts/import-all-movies.js 10 upcoming
+```
+
+**Ce que ça fait :**
+
+- Boucle automatiquement sur toutes les pages demandées
+- Pause de 1 seconde entre chaque page
+- Affiche un résumé à la fin (total films, acteurs créés)
+- Continue même si une page échoue
+
+---
+
+### Enrichissement massif des acteurs
+
+**Fichier :** `scripts/enrich-all-actors.js`
+
+**Enrichir tous les acteurs par batch de 50 :**
+
+```bash
+node scripts/enrich-all-actors.js
+```
+
+**Enrichir par batch de 100 :**
+
+```bash
+node scripts/enrich-all-actors.js 100
+```
+
+**Enrichir avec max 10 itérations :**
+
+```bash
+node scripts/enrich-all-actors.js 50 10
+```
+
+**Ce que ça fait :**
+
+- Enrichit automatiquement tous les acteurs sans `birth_date`
+- S'arrête quand `remaining = 0`
+- Affiche le total à la fin
+- Pause de 1 seconde entre chaque batch
+
+---
+
+### Workflow complet d'import
+
+```bash
+# 1. Importer 20 pages de films populaires
+node scripts/import-all-movies.js 20
+
+# 2. Enrichir tous les acteurs créés
+node scripts/enrich-all-actors.js
+
+# 3. Importer 5 pages de films "upcoming"
+node scripts/import-all-movies.js 5 upcoming
+
+# 4. Enrichir les nouveaux acteurs
+node scripts/enrich-all-actors.js
+```
+
+---
+
 ## Troubleshooting
 
 ### Erreur "TMDB_API_KEY is not defined"

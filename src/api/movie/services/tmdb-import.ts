@@ -35,7 +35,8 @@ module.exports = {
       throw new Error(`Erreur TMDb movies: ${moviesResponse.status}`);
     }
 
-    // Un typage est fait en amont dans un fichier séparé
+    // Un typage est fait en amont dans un fichier séparé (src/types/tmdb.types.ts)
+    // Ici on récupère la liste des 20 films et on extrait que l'id tmdb de chaque film
 
     const moviesData = (await moviesResponse.json()) as TMDBMoviesResponse;
     const movieIds = moviesData.results.map((m) => m.id);
@@ -85,7 +86,7 @@ module.exports = {
           ?.filter((person) => person.cast_id !== undefined)
           .slice(0, 10) || [];
 
-      // 5. On récupère leur id pour commencer à les créer dans la DB si besoin
+      // 5. On récupère leur id pour commencer à les créer dans la DB
       const actorIds = [];
 
       for (const actor of actorsList) {
@@ -100,7 +101,7 @@ module.exports = {
               name: actor.name,
               birth_date: null, // Ce sera pour la phase 2
               img: null, // Pareil
-              tmdb_id: actor.id, // Grâce à ça
+              tmdb_id: actor.id,
             },
           });
           createdActors++; // on met à jour
@@ -136,7 +137,7 @@ module.exports = {
       );
 
       // Petite pause pour respecter rate limit TMDB (vive le BAN)
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      // await new Promise((resolve) => setTimeout(resolve, 150));
     }
 
     return {

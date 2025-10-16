@@ -5,7 +5,7 @@ export default {
       path: "/actors/enrich-tmdb",
       handler: "actor.enrichActorsFromTMDB",
       config: {
-        auth: false, // Pas besoin d'auth pour l'import manuel
+        auth: false, // désactivé pour tester facilement, PENSER A REACTIVER AVEC JWT !!!!
       },
     },
   ],
