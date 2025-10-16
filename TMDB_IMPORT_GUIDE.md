@@ -1,4 +1,8 @@
-# Guide de test - Import TMDB
+# Guide d'utilisation - Import TMDB
+
+Ce guide explique comment utiliser les fonctionnalités d'import de films et d'enrichissement d'acteurs depuis l'API TMDB.
+
+---
 
 ## Prérequis
 
@@ -12,6 +16,92 @@ TMDB_API_KEY=votre_cle_api_ici
 
 ```bash
 npm run dev
+```
+
+---
+
+## Méthodes d'utilisation
+
+### 🚀 Méthode recommandée : Scripts d'automatisation
+
+Les scripts permettent d'importer massivement des films et d'enrichir tous les acteurs automatiquement.
+
+#### Import massif de films
+
+**Fichier :** `scripts/import-all-movies.js`
+
+**Importer 20 pages (400 films) :**
+
+```bash
+node scripts/import-all-movies.js
+```
+
+**Importer 50 pages (1000 films) :**
+
+```bash
+node scripts/import-all-movies.js 50
+```
+
+**Importer 10 pages de films "upcoming" :**
+
+```bash
+node scripts/import-all-movies.js 10 upcoming
+```
+
+**Ce que ça fait :**
+
+- Boucle automatiquement sur toutes les pages demandées
+- Pause de 1 seconde entre chaque page
+- Affiche un résumé à la fin (total films, acteurs créés)
+- Continue même si une page échoue
+
+---
+
+#### Enrichissement massif des acteurs
+
+**Fichier :** `scripts/enrich-all-actors.js`
+
+**Enrichir tous les acteurs par batch de 50 :**
+
+```bash
+node scripts/enrich-all-actors.js
+```
+
+**Enrichir par batch de 100 :**
+
+```bash
+node scripts/enrich-all-actors.js 100
+```
+
+**Enrichir avec max 10 itérations :**
+
+```bash
+node scripts/enrich-all-actors.js 50 10
+```
+
+**Ce que ça fait :**
+
+- Enrichit automatiquement tous les acteurs sans `birth_date`
+- S'arrête quand `remaining = 0`
+- Affiche le total à la fin
+- Pause de 1 seconde entre chaque batch
+
+---
+
+#### Workflow complet d'import
+
+```bash
+# 1. Importer 20 pages de films populaires
+node scripts/import-all-movies.js 20
+
+# 2. Enrichir tous les acteurs créés
+node scripts/enrich-all-actors.js
+
+# 3. Importer 5 pages de films "upcoming"
+node scripts/import-all-movies.js 5 upcoming
+
+# 4. Enrichir les nouveaux acteurs
+node scripts/enrich-all-actors.js
 ```
 
 ---
@@ -142,7 +232,7 @@ curl -X POST http://localhost:1337/api/actors/enrich-tmdb \
 
 ---
 
-## Méthode 3 : Via Strapi Console (Avancé)
+## Méthode 3 : Via Strapi Console (Développeurs)
 
 Dans un terminal séparé (Strapi doit tourner) :
 
@@ -169,7 +259,7 @@ await strapi.service("api::actor.tmdb-import").enrichActors(50);
 
 ---
 
-## Vérification des données
+## Vérification et monitoring
 
 ### Voir les films importés
 
@@ -185,7 +275,7 @@ await strapi.service("api::actor.tmdb-import").enrichActors(50);
 
 ---
 
-## Scénario de test complet
+## Exemple d'utilisation complète
 
 1. **Importer popular page 1** (20 films populaires, ~150 acteurs)
 2. **Vérifier dans Admin** → Content Manager → Movies
@@ -197,7 +287,7 @@ await strapi.service("api::actor.tmdb-import").enrichActors(50);
 
 ---
 
-## Logs à surveiller
+## Logs de l'application
 
 Dans le terminal Strapi, tu verras :
 
@@ -219,138 +309,7 @@ Dans le terminal Strapi, tu verras :
 
 ---
 
-## 🤖 Préparation Cron Job (automatisation future)
-
-Exemples de stratégies d'automatisation :
-
-### Stratégie 1 : Mise à jour quotidienne upcoming
-
-```javascript
-// Tous les jours à 2h du matin
-cron.schedule("0 2 * * *", async () => {
-  await strapi
-    .service("api::movie.tmdb-import")
-    .importPopularMovies(1, "upcoming");
-});
-```
-
-### Stratégie 2 : Mise à jour hebdomadaire popular
-
-```javascript
-// Tous les lundis à 3h du matin
-cron.schedule("0 3 * * 1", async () => {
-  for (let page = 1; page <= 3; page++) {
-    await strapi
-      .service("api::movie.tmdb-import")
-      .importPopularMovies(page, "popular");
-    await new Promise((r) => setTimeout(r, 5000)); // 5s entre pages
-  }
-});
-```
-
-### Stratégie 3 : Mix popular + upcoming
-
-```javascript
-// Tous les jours à 4h
-cron.schedule("0 4 * * *", async () => {
-  // Upcoming
-  await strapi
-    .service("api::movie.tmdb-import")
-    .importPopularMovies(1, "upcoming");
-  await new Promise((r) => setTimeout(r, 10000));
-
-  // Popular
-  await strapi
-    .service("api::movie.tmdb-import")
-    .importPopularMovies(1, "popular");
-});
-```
-
----
-
-## 🚀 Méthode 4 : Scripts d'automatisation (Recommandé)
-
-### Import massif de films
-
-**Fichier :** `scripts/import-all-movies.js`
-
-**Importer 20 pages (400 films) :**
-
-```bash
-node scripts/import-all-movies.js
-```
-
-**Importer 50 pages (1000 films) :**
-
-```bash
-node scripts/import-all-movies.js 50
-```
-
-**Importer 10 pages de films "upcoming" :**
-
-```bash
-node scripts/import-all-movies.js 10 upcoming
-```
-
-**Ce que ça fait :**
-
-- Boucle automatiquement sur toutes les pages demandées
-- Pause de 1 seconde entre chaque page
-- Affiche un résumé à la fin (total films, acteurs créés)
-- Continue même si une page échoue
-
----
-
-### Enrichissement massif des acteurs
-
-**Fichier :** `scripts/enrich-all-actors.js`
-
-**Enrichir tous les acteurs par batch de 50 :**
-
-```bash
-node scripts/enrich-all-actors.js
-```
-
-**Enrichir par batch de 100 :**
-
-```bash
-node scripts/enrich-all-actors.js 100
-```
-
-**Enrichir avec max 10 itérations :**
-
-```bash
-node scripts/enrich-all-actors.js 50 10
-```
-
-**Ce que ça fait :**
-
-- Enrichit automatiquement tous les acteurs sans `birth_date`
-- S'arrête quand `remaining = 0`
-- Affiche le total à la fin
-- Pause de 1 seconde entre chaque batch
-
----
-
-### Workflow complet d'import
-
-```bash
-# 1. Importer 20 pages de films populaires
-node scripts/import-all-movies.js 20
-
-# 2. Enrichir tous les acteurs créés
-node scripts/enrich-all-actors.js
-
-# 3. Importer 5 pages de films "upcoming"
-node scripts/import-all-movies.js 5 upcoming
-
-# 4. Enrichir les nouveaux acteurs
-node scripts/enrich-all-actors.js
-```
-
----
-
-## Troubleshooting
+## Résolution de problèmes
 
 ### Erreur "TMDB_API_KEY is not defined"
 
