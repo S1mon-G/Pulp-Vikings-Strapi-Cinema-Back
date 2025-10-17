@@ -30,16 +30,17 @@ async function enrichAllActors() {
       }
 
       const result = await response.json();
+      const data = result.data; // Extraire le data de la réponse
 
-      totalEnriched += result.enriched;
-      totalFailed += result.failed;
+      totalEnriched += data.enriched;
+      totalFailed += data.failed;
 
       console.log(
-        `✅ Batch ${iteration} : ${result.enriched} enrichis, ${result.remaining} restants`
+        `✅ Batch ${iteration} : ${data.enriched} enrichis, ${data.remaining} restants`
       );
 
       // Si plus aucun acteur à enrichir, on arrête
-      if (result.remaining === 0) {
+      if (data.remaining === 0) {
         console.log(
           `\n🎉 Terminé : ${totalEnriched} acteurs enrichis, ${totalFailed} échecs`
         );
