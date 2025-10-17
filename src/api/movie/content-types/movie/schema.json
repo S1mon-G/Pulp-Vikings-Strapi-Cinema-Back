@@ -28,6 +28,15 @@
       "relation": "manyToMany",
       "target": "api::actor.actor",
       "mappedBy": "movies"
+    },
+    "img": {
+      "type": "string"
+    },
+    "vote_average": {
+      "type": "decimal"
+    },
+    "tmdb_id": {
+      "type": "integer"
     }
   }
 }
