@@ -58,10 +58,11 @@ module.exports = {
         : null;
 
       // 4. Update l'acteur avec les infos complètes
+      // Si pas de birthday, on met "1900-01-01" pour marquer comme "traité mais inconnu"
       await strapi.db.query("api::actor.actor").update({
         where: { id: actor.id },
         data: {
-          birth_date: personData.birthday || null,
+          birth_date: personData.birthday || "1900-01-01",
           img: profileImgUrl,
         },
       });
