@@ -25,5 +25,24 @@ export default factories.createCoreController(
         };
       }
     },
+    // Endpoint pour obtenir des acteurs aléatoires
+    async getRandomActors(ctx) {
+      try {
+        const allActors = await strapi.db.query("api::actor.actor").findMany({
+          populate: ["movies"],
+        });
+        const shuffledActors = allActors.sort(() => Math.random() - 0.5);
+        ctx.body = {
+          success: true,
+          data: shuffledActors,
+        };
+      } catch (error) {
+        ctx.status = 500;
+        ctx.body = {
+          success: false,
+          error: error.message,
+        };
+      }
+    },
   })
 );

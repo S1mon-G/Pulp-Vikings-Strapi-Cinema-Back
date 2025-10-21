@@ -38,5 +38,46 @@ export default factories.createCoreController(
         };
       }
     },
+    // Endpoint pour obtenir les films par note (on enlève les films qui sont à vote "null")
+    async getByRating(ctx) {
+      try {
+        const { order = "desc" } = ctx.query;
+        const movies = await strapi.db.query("api::movie.movie").findMany({
+          where: {
+            vote_average: { $ne: null },
+          },
+          orderBy: { vote_average: order },
+          populate: ["actors"],
+        });
+        ctx.body = {
+          success: true,
+          data: movies,
+        };
+      } catch (error) {
+        ctx.body = {
+          success: false,
+          error: error.message,
+        };
+      }
+    },
+    // Endpoint pour obtenir des films aléatoires
+    async getRandomMovies(ctx) {
+      try {
+        const allMovies = await strapi.db.query("api::movie.movie").findMany({
+          populate: ["actors"],
+        });
+        const shuffledMovies = allMovies.sort(() => Math.random() - 0.5);
+        ctx.body = {
+          success: true,
+          data: shuffledMovies,
+        };
+      } catch (error) {
+        ctx.status = 500;
+        ctx.body = {
+          success: false,
+          error: error.message,
+        };
+      }
+    },
   })
 );
