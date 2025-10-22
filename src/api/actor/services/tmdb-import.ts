@@ -17,19 +17,29 @@ module.exports = {
 
     const actors = await strapi.db.query("api::actor.actor").findMany({
       where: {
-        birth_date: null,
+        $or: [{ birth_date: null }, { biography: null }],
         tmdb_id: { $ne: null },
       },
       limit: batchSize,
     });
 
-    // Petit return rapide si y'a rien à faire
+    console.log(`DEBUG: Acteurs trouvés: ${actors.length}`);
 
+    // Si rien à faire, on compte les restants et on retourne
     if (actors.length === 0) {
+      const remaining = await strapi.db.query("api::actor.actor").count({
+        where: {
+          $or: [{ birth_date: null }, { biography: null }],
+          tmdb_id: { $ne: null },
+        },
+      });
+
       return {
         success: true,
         enriched: 0,
-        message: "Tous les acteurs sont déjà enrichis ✨",
+        failed: 0,
+        remaining: remaining,
+        message: "Aucun acteur à enrichir pour ce batch",
       };
     }
 
@@ -64,6 +74,8 @@ module.exports = {
         data: {
           birth_date: personData.birthday || "1900-01-01",
           img: profileImgUrl,
+          biography: personData.biography || "Biographie non disponible.",
+          popularity: personData.popularity,
         },
       });
 
@@ -78,7 +90,10 @@ module.exports = {
 
     // 5. Compter combien il en reste
     const remaining = await strapi.db.query("api::actor.actor").count({
-      where: { birth_date: null },
+      where: {
+        $or: [{ birth_date: null }, { biography: null }],
+        tmdb_id: { $ne: null },
+      },
     });
 
     return {
