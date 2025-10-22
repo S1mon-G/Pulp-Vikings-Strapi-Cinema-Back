@@ -29,6 +29,12 @@
     "tmdb_id": {
       "type": "integer",
       "unique": true
+    },
+    "biography": {
+      "type": "text"
+    },
+    "popularity": {
+      "type": "decimal"
     }
   }
 }
