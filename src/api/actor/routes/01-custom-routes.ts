@@ -10,6 +10,16 @@ export default {
     },
     {
       method: "GET",
+      path: "/actors/by-rating",
+      handler: "actor.getByRating",
+      config: {
+        policies: [],
+        middlewares: [],
+        auth: false,
+      },
+    },
+    {
+      method: "GET",
       path: "/actors/random-list",
       handler: "actor.getRandomActors",
       config: {

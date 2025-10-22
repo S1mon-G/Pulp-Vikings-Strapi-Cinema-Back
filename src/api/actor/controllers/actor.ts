@@ -44,5 +44,26 @@ export default factories.createCoreController(
         };
       }
     },
+    async getByRating(ctx) {
+      try {
+        const { order = "desc" } = ctx.query;
+        const actors = await strapi.db.query("api::actor.actor").findMany({
+          where: {
+            popularity: { $ne: null },
+          },
+          orderBy: { popularity: order },
+          populate: ["movies"],
+        });
+        ctx.body = {
+          success: true,
+          data: actors,
+        };
+      } catch (error) {
+        ctx.body = {
+          success: false,
+          error: error.message,
+        };
+      }
+    },
   })
 );
