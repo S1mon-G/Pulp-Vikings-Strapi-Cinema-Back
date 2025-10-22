@@ -17,7 +17,7 @@ module.exports = {
 
     const actors = await strapi.db.query("api::actor.actor").findMany({
       where: {
-        birth_date: null,
+        $or: [{ birth_date: null }, { biography: null }],
         tmdb_id: { $ne: null },
       },
       limit: batchSize,
@@ -58,12 +58,14 @@ module.exports = {
         : null;
 
       // 4. Update l'acteur avec les infos complètes
-      // Si pas de birthday, on met "1900-01-01" pour marquer comme "traité mais inconnu"
+      // Si pas de birthday, on met "1900-01-01" pour marquer comme "traité mais inconnu", pareil pour la biographie
       await strapi.db.query("api::actor.actor").update({
         where: { id: actor.id },
         data: {
           birth_date: personData.birthday || "1900-01-01",
           img: profileImgUrl,
+          biography: personData.biography || "Biographie non disponible.",
+          popularity: personData.popularity,
         },
       });
 
@@ -78,7 +80,10 @@ module.exports = {
 
     // 5. Compter combien il en reste
     const remaining = await strapi.db.query("api::actor.actor").count({
-      where: { birth_date: null },
+      where: {
+        $or: [{ birth_date: null }, { biography: null }],
+        tmdb_id: { $ne: null },
+      },
     });
 
     return {
