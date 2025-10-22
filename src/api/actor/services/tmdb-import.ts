@@ -23,23 +23,13 @@ module.exports = {
       limit: batchSize,
     });
 
-    console.log(`DEBUG: Acteurs trouvés: ${actors.length}`);
+    // Petit return rapide si y'a rien à faire
 
-    // Si rien à faire, on compte les restants et on retourne
     if (actors.length === 0) {
-      const remaining = await strapi.db.query("api::actor.actor").count({
-        where: {
-          $or: [{ birth_date: null }, { biography: null }],
-          tmdb_id: { $ne: null },
-        },
-      });
-
       return {
         success: true,
         enriched: 0,
-        failed: 0,
-        remaining: remaining,
-        message: "Aucun acteur à enrichir pour ce batch",
+        message: "Tous les acteurs sont déjà enrichis ✨",
       };
     }
 
@@ -68,7 +58,7 @@ module.exports = {
         : null;
 
       // 4. Update l'acteur avec les infos complètes
-      // Si pas de birthday, on met "1900-01-01" pour marquer comme "traité mais inconnu"
+      // Si pas de birthday, on met "1900-01-01" pour marquer comme "traité mais inconnu", pareil pour la biographie
       await strapi.db.query("api::actor.actor").update({
         where: { id: actor.id },
         data: {
