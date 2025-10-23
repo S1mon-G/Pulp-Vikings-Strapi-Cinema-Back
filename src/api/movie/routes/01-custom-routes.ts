@@ -5,9 +5,9 @@ export default {
       path: "/movies/import-tmdb",
       handler: "movie.importFromTMDB",
       config: {
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
-        auth: false, // désactivé pour tester facilement, PENSER A REACTIVER AVEC JWT !!!!
       },
     },
     {
@@ -15,9 +15,9 @@ export default {
       path: "/movies/by-rating",
       handler: "movie.getByRating",
       config: {
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
-        auth: false,
       },
     },
     {
@@ -25,9 +25,9 @@ export default {
       path: "/movies/random-list",
       handler: "movie.getRandomMovies",
       config: {
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
-        auth: false,
       },
     },
   ],
