@@ -1,0 +1,15 @@
+{
+    "kind": "collectionType",
+    "collectionName": "searches",
+    "info": {
+        "singularName": "search",
+        "pluralName": "searches",
+        "displayName": "Search",
+        "description": "Virtual collection type for custom search API"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {}
+}

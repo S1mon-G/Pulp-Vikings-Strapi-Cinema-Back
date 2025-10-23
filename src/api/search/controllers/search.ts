@@ -1,32 +1,38 @@
-module.exports = {
-    async searchAll(ctx) {
-        const { q } = ctx.query;
-        if (!q || q.trim() === '') {
-            return { data: [] };
-        }
+import { factories } from "@strapi/strapi";
 
-        const normalized = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+export default factories.createCoreController(
+    'api::search.search',
+    ({ strapi }) => ({
+        async searchAll(ctx) {
+            const { q } = ctx.query as any;
+            if (!q || q.trim() === '') {
+                return { data: [] };
+            }
 
-        const [movies, actors] = await Promise.all([
-            strapi.db.query('api::movie.movie').findMany({
-                where: {
-                    title: { $containsi: normalized },
-                },
-                limit: 5,
-            }),
-            strapi.db.query('api::actor.actor').findMany({
-                where: {
-                    name: { $containsi: normalized },
-                },
-                limit: 5,
-            }),
-        ]);
+            const normalized = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-        return {
-            data: [
-                ...movies.map((m) => ({ type: 'movie', id: m.documentId, name: m.title })),
-                ...actors.map((a) => ({ type: 'actor', id: a.documentId, name: a.name })),
-            ],
-        };
-    },
-};
+            const [movies, actors] = await Promise.all([
+                strapi.db.query('api::movie.movie').findMany({
+                    where: {
+                        title: { $containsi: normalized },
+                    },
+                    limit: 5,
+                }),
+                strapi.db.query('api::actor.actor').findMany({
+                    where: {
+                        name: { $containsi: normalized },
+                    },
+                    limit: 5,
+                }),
+            ]);
+
+            return {
+                data: [
+                    ...movies.map((m) => ({ type: 'movie', id: m.documentId, name: m.title })),
+                    ...actors.map((a) => ({ type: 'actor', id: a.documentId, name: a.name })),
+                ],
+
+            };
+        },
+    })
+);
