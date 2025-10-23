@@ -5,7 +5,9 @@ module.exports = {
             path: '/search',
             handler: 'search.searchAll',
             config: {
-                auth: false,
+                auth: { scope: [] },
+                policies: [],
+                middlewares: [],
             },
         },
     ],

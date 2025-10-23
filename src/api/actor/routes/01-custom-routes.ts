@@ -5,7 +5,9 @@ export default {
       path: "/actors/enrich-tmdb",
       handler: "actor.enrichActorsFromTMDB",
       config: {
-        auth: false, // désactivé pour tester facilement, PENSER A REACTIVER AVEC JWT !!!!
+        auth: { scope: [] }, // désactivé pour tester facilement
+        policies: [],
+        middlewares: [],
       },
     },
     {
@@ -13,9 +15,9 @@ export default {
       path: "/actors/by-rating",
       handler: "actor.getByRating",
       config: {
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
-        auth: false,
       },
     },
     {
@@ -23,9 +25,9 @@ export default {
       path: "/actors/random-list",
       handler: "actor.getRandomActors",
       config: {
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
-        auth: false,
       },
     },
   ],
