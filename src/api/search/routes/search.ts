@@ -1,13 +1,11 @@
-module.exports = {
+export default {
   routes: [
     {
       method: "GET",
       path: "/search",
       handler: "search.searchAll",
       config: {
-        auth: { scope: [] },
-        policies: [],
-        middlewares: [],
+        auth: false,
       },
     },
   ],
