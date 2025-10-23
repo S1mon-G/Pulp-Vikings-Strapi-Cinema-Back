@@ -5,7 +5,7 @@ export default {
       path: "/actors/enrich-tmdb",
       handler: "actor.enrichActorsFromTMDB",
       config: {
-        auth: { scope: [] }, // désactivé pour tester facilement
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
       },
