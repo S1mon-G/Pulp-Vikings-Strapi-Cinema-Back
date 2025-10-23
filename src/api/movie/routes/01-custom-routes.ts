@@ -5,7 +5,7 @@ export default {
       path: "/movies/import-tmdb",
       handler: "movie.importFromTMDB",
       config: {
-        auth: { scope: [] }, // désactivé pour tester facilement
+        auth: { scope: [] },
         policies: [],
         middlewares: [],
       },
